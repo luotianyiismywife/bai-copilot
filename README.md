@@ -70,7 +70,7 @@ Built-in definitions for the B.AI chat models (verified against `GET /v1/models`
 | Anthropic | `claude-opus-5` / `claude-fable-5` / `claude-sonnet-5` / `claude-opus-4.8` / `4.7` / `4.6` / `4.5` / `claude-sonnet-4.6` / `4.5` / `claude-haiku-4.5` | ✅ | opt-in (enabled/disabled) | Anthropic |
 | Google | `gemini-3.1-pro` / `gemini-3.6-flash` / `gemini-3.5-flash` / `gemini-3.5-flash-lite` / `gemini-3-flash` | ✅ | always | OpenAI |
 
-> ¹ `deepseek-v4-flash` is currently free (limited-time promo, 0 credits) — but on B.AI the model quality is noticeably lower (shallow answers, often ignores tool calls/instructions). Note: the same v4-flash is available for free from other providers with better quality, so we don't recommend choosing B.AI's v4-flash; on this platform prefer the paid models.
+> ¹ `deepseek-v4-flash` is free on B.AI (0 credits) — but the quality is poor (shallow answers, often ignores tool calls/instructions), and B.AI has a track record of silently swapping/shrinking models (e.g. Claude served via Gemini). The same free v4-flash is available from other providers with better quality. **We don't recommend spending money on this platform at all** — use it only for free-model trials.
 
 > [!WARNING]
 > **B.AI has no Responses API** (`/v1/responses` does not exist). The `bai.apiMode` setting supports only `auto` / `openai` / `anthropic`.
@@ -173,7 +173,7 @@ B.AI 是一个 AI API 网关，通过 OpenAI 兼容（`/v1/chat/completions`）�
 | Anthropic | `claude-opus-5` / `claude-fable-5` / `claude-sonnet-5` / `claude-opus-4.8` / `4.7` / `4.6` / `4.5` / `claude-sonnet-4.6` / `4.5` / `claude-haiku-4.5` | ✅ | 可选 (enabled/disabled) | Anthropic |
 | Google | `gemini-3.1-pro` / `gemini-3.6-flash` / `gemini-3.5-flash` / `gemini-3.5-flash-lite` / `gemini-3-flash` | ✅ | 常开 | OpenAI |
 
-> ¹ `deepseek-v4-flash` 当前限免（0 积分）——**但 B.AI 这个渠道的 v4-flash 实测效果较差**（回答浅薄、经常忽略工具调用/不按指令执行）。注意：同样的 v4-flash 在其他平台也有免费渠道且质量更好，**不建议选 B.AI 的 v4-flash**；在本平台请用付费模型。
+> ¹ `deepseek-v4-flash` 在 B.AI 上虽限免（0 积分），但实测质量差（回答浅薄、常忽略工具调用/不按指令执行）；且 B.AI 有模型"缩水"前科（如 Claude 被换成 Gemini 之类的事件），同样的免费 v4-flash 在其他平台质量更好。**本插件不推荐在该平台消费**——只用它白嫖免费模型试试水即可。
 
 > [!WARNING]
 > **B.AI 没有 Responses API**（`/v1/responses` 不存在）。`bai.apiMode` 仅支持 `auto` / `openai` / `anthropic`。
