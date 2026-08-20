@@ -333,7 +333,17 @@ GET /trpc/lambda/usage.records?batch=1&input={"0":{"json":{"cursor":null,"page":
 | 计费货币 | CNY | 积分 points | UI 文案 ¥ → 积分 |
 | 模型元数据 | /v1/models 含 context_length 等 | 仅 id/owned_by/endpoints | 上下文长度需内置或查 models.dev |
 | 视觉标记 | supports_vision | 无 | 内置模型表维护 vision 字段 |
+### 4.7 二次实测发现（2026-08-20，真实 API Key + 真实账号）
 
+**thinking 与 temperature 组合已放宽**：`/v1/messages` 端点 `thinking: {type:"enabled", budget_tokens:1024}` + `temperature`/`top_p` 任意组合**全部 200 OK**（tokenrhythm 时代实测是 400"请求参数组合无效"，B.AI 平台已修复）。插件仍保守地在 thinking enabled 时跳过 temperature（符合 Anthropic 官方协议，Claude 系列严格端点必需，无害）。
+
+**DeepSeek thinking 模式要求回传 reasoning_content**：OpenAI 端点多轮工具回填时，assistant 消息必须携带原始 `reasoning_content` 字段，缺失返回 400 `"The reasoning_content in the thinking mode must be passed back to the API"`——插件 `convertMessages` 已自动回传（`includeReasoningInRequest`）。
+
+**付费模型需充值解锁**：GLM-5.2 等付费模型在账号未充值时返回 403 `access_denied: Access restricted. Deposit required to unlock premium models`（与 403 余额不足共用状态码，轮换时会一并跳过——符合预期）。
+
+**Anthropic 端点工具调用不稳定**：deepseek-v4-flash 在 `/v1/messages` 端点收到 `tool_choice: {type:"any"}` 时经常忽略工具定义直接文本回复（同一定义在 OpenAI 端点稳定触发）。**这是模型/网关行为，非插件问题**——进一步印证默认使用 OpenAI 格式的建议。
+
+**429 限流**：deepseek-v4-flash 限免模型限流阈值低，密集请求（<400ms 间隔）会触发 429。测试脚本已加请求节流。
 ---
 
 ## 5. 测试凭据（开发用）
