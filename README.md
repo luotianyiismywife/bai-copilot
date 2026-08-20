@@ -70,7 +70,7 @@ Built-in definitions for the B.AI chat models (verified against `GET /v1/models`
 | Anthropic | `claude-opus-5` / `claude-fable-5` / `claude-sonnet-5` / `claude-opus-4.8` / `4.7` / `4.6` / `4.5` / `claude-sonnet-4.6` / `4.5` / `claude-haiku-4.5` | ✅ | opt-in (enabled/disabled) | Anthropic |
 | Google | `gemini-3.1-pro` / `gemini-3.6-flash` / `gemini-3.5-flash` / `gemini-3.5-flash-lite` / `gemini-3-flash` | ✅ | always | OpenAI |
 
-> ¹ `deepseek-v4-flash` is currently free (limited-time promo, 0 credits).
+> ¹ `deepseek-v4-flash` is currently free (limited-time promo, 0 credits) — great for free usage, but the model quality is noticeably lower (it often skips tool calls, produces shallow answers, and sometimes ignores instructions). Use it for casual chats / quick tests; switch to paid models for serious work.
 
 > [!WARNING]
 > **B.AI has no Responses API** (`/v1/responses` does not exist). The `bai.apiMode` setting supports only `auto` / `openai` / `anthropic`.
@@ -173,7 +173,7 @@ B.AI 是一个 AI API 网关，通过 OpenAI 兼容（`/v1/chat/completions`）�
 | Anthropic | `claude-opus-5` / `claude-fable-5` / `claude-sonnet-5` / `claude-opus-4.8` / `4.7` / `4.6` / `4.5` / `claude-sonnet-4.6` / `4.5` / `claude-haiku-4.5` | ✅ | 可选 (enabled/disabled) | Anthropic |
 | Google | `gemini-3.1-pro` / `gemini-3.6-flash` / `gemini-3.5-flash` / `gemini-3.5-flash-lite` / `gemini-3-flash` | ✅ | 常开 | OpenAI |
 
-> ¹ `deepseek-v4-flash` 当前限免（0 积分）。
+> ¹ `deepseek-v4-flash` 当前限免（0 积分），**可以白嫖**——但实测效果较差：回答浅薄、经常忽略工具调用/不按指令执行，仅适合闲聊或快速测试，正经使用建议选付费模型。
 
 > [!WARNING]
 > **B.AI 没有 Responses API**（`/v1/responses` 不存在）。`bai.apiMode` 仅支持 `auto` / `openai` / `anthropic`。
