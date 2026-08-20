@@ -27,12 +27,14 @@ node test/api-tests.mjs <API_KEY> [openai|anthropic|all]
 | Anthropic | 7 | 流式对话（SSE 事件序列） |
 | Anthropic | 8 | 流式工具调用（tool_use） |
 | Anthropic | 9 | thinking 参数（enabled + budget_tokens / disabled） |
-| Anthropic | 9b | temperature/top_p 与 thinking 组合规则（enabled→400 组合无效 / disabled→200，生产回归验证） |
+| Anthropic | 9b | temperature/top_p 与 thinking 组合（2026-08-20 实测：平台已放宽，全部组合 200 OK；插件仍保守在 enabled 时跳过 temperature，符合 Anthropic 官方协议） |
 | 公共 | 16 | 无效模型 ID 返回 4xx |
 | 公共 | 16b | 无效模型走 Anthropic 端点返回错误 |
 
 ## 平台差异速查
 
 - 余额不足状态码：**403**（非 402）
-- Anthropic thinking：仅 `enabled`（需 `budget_tokens` ≥ 1024 且 < max_tokens）/ `disabled`，**不支持 adaptive**；enabled 时必须省略 temperature/top_p
+- Anthropic thinking：仅 `enabled`（需 `budget_tokens` ≥ 1024 且 < max_tokens）/ `disabled`，**不支持 adaptive**
+- **2026-08-20 实测**：thinking enabled + temperature/top_p 组合已不报 400（平台放宽）；插件仍保守跳过 temperature（Claude 系列严格端点必需）
 - 全部 38 个模型均支持 openai + anthropic 双端点
+- DeepSeek thinking 模式：OpenAI 端点多轮工具回填时 assistant 消息必须回传 `reasoning_content`（缺失 400）
