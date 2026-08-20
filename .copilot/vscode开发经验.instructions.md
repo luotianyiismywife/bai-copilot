@@ -29,15 +29,15 @@ description: "Use when: 需要操作浏览器（市场上传/审核、GitHub Rel
 ### 1.2 VS Code 市场（Marketplace）上传流程
 
 1. 打开 `https://marketplace.visualstudio.com/manage/publishers/<publisherId>` → 用户登录（推荐点「使用 GitHub 登录」按钮免密登录，见下方 ✅ 已验证说明）
-2. 在扩展列表行点 **More Actions...**（`button[aria-label="More Actions..."]`）→ **Update**
-3. 上传对话框出现：`page.setInputFiles('#file-upload', 'xxx.vsix')`
+2. **新扩展（New extension）路径（已验证 2026-08-20 bai-copilot）**：发布者管理页顶部 `More commands`（⋯ 菜单）→ **New extension** → **Visual Studio Code** → 弹出「Upload Visual Studio Code extension」对话框 → `page.setInputFiles('input[type=file]', 'xxx.vsix')`（或点 "Click here to upload a package" 触发 filechooser）→ 文件显示在对话框 → 点 **Upload**
+   > ⚠️ `More commands` 菜单是 JS 展开（React），`click_element` 可能只展开不显示子项，**用 `run_playwright_code` + `page.getByRole('menuitem', { name: /New extension/i })` 逐级点击**最可靠
+3. **更新已有扩展**：在扩展列表行点 **More Actions...**（`button[aria-label="More Actions..."]`）→ **Update** → 上传对话框 → 同上选文件 → Upload
 4. 点击 **Upload** → 出现 reCAPTCHA 验证（**需用户手动完成**）→ 验证后自动上传
 5. 列表显示 `Verifying <新版本>` → 等待审核通过
 
 > ✅ **已验证（2026-08-09 / 2026-08-14）：市场登录页点「使用 GitHub 登录」可免密登录**——Microsoft 登录页（`login.microsoftonline.com`，URL 带 `githubsi=true`）有「使用 GitHub 登录」按钮。**注意**：① `githubsi=true` 参数**不会**自动跳 GitHub 授权，必须**手动点击**该按钮；② 该按钮是 JS 事件绑定（`click: $fedCredButtonsControl.fedCredButton_onClick`），**`click_element` 会超时/失败，必须用 `run_playwright_code` + `page.evaluate(() => btn.click())` 强制触发**。完整流程：JS 点击按钮 → 跳 `github.com/login/oauth/authorize`（GitHub 已登录则自动回跳）→ `login.live.com/HandleGithubResponse.srf` → 「保持登录状态?」确认页（显示绑定的 Microsoft 账号，如 `azhe-hjm@outlook.com`）→ 点「是」→ 进入市场管理页（账号显示「天依 洛 (azhe-hjm@outlook.com)」）。GitHub 与市场登录态在同一浏览器会话内**共享**，GitHub 登录后市场无需再次登录；但**新开浏览器页/新会话仍要求重新登录**。
 
-> ⚠️ **教训（2026-08-10 v1.6.3）**：市场上传的 reCAPTCHA 验证**必须能访问 google.com**。中国大陆网络下内置浏览器会报"无法连接到 reCAPTCHA 服务"（`google.com/recaptcha/api2/clr` 被 CSP `connect-src` 拦截 + `ERR_ABORTED`/`ERR_BLOCKED_BY_ORB`），**刷新无效**。此时应**改用外部浏览器（Chrome/Edge，配代理插件）手动上传**，或开代理后重试内置浏览器。
-
+> ⚠️ **教训（2026-08-10 v1.6.3）**：市场上传的 reCAPTCHA 验证**必须能访问 google.com**。中国大陆网络下内置浏览器会报"无法连接到 reCAPTCHA 服务"（`google.com/recaptcha/api2/clr` 被 CSP `connect-src` 拦截 + `ERR_ABORTED`/`ERR_BLOCKED_BY_ORB`），**刷新无效**。此时应**改用外部浏览器（Chrome/Edge，配代理插件）手动上传**，或开代理后重试内置浏览器。> ✅ **复现确认（2026-08-20 bai-copilot v1.0.0）**：终端虽配置系统代理（HTTP_PROXY=127.0.0.1:7897）且内置浏览器可正常访问 github.com/visualstudio.com（GitHub 2FA、Microsoft 登录均成功），但 reCAPTCHA 仍报 `google.com/recaptcha/api2/anchor` ERR_ABORTED + clr 被 CSP 拦截。**内置浏览器不继承系统代理**（或代理不覆盖 google.com），老问题依旧。解决：外部浏览器（Chrome 装代理插件）手动完成上传，或 `vsce publish`（需 PAT）。
 > ⚠️ **关键教训**：vsix 打包必须**包含 dependencies**！用 `npx vsce package`（**不要加 `--no-dependencies`**），否则插件装不上 node_modules，用户激活直接崩溃（报"命令未找到"）。打包后务必 `npx vsce ls` 确认 `node_modules/` 在包内。
 
 ### 1.3 GitHub Release 创建流程
