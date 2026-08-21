@@ -23,7 +23,7 @@
 	"bugs": {
 		"url": "https://github.com/luotianyiismywife/bai-copilot/issues"
 	},
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"vscode": "^1.116.0"
 	},

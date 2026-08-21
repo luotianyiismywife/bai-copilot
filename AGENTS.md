@@ -328,7 +328,7 @@ test/
 扩展激活入口。初始化日志、分词器、状态栏；注册 `LanguageModelChatProvider`；注册 8 条命令；首次安装时调用 `showWelcomeIfNeeded()` 显示欢迎页引导。
 
 #### `showApiKeyManager(context: vscode.ExtensionContext): Promise<void>`
-多 Key 管理 QuickPick 主流程（`bai.manageApiKeys` 命令）。循环渲染 key 列表（脱敏显示 + 可用性/当前使用/cookie 状态/**积分余额**标记），支持动作：添加 Key、批量导入、删除、设为当前使用（仅 single 模式）、重置失效状态、检测可用性、绑定/更新/清除 Cookie、编辑 Key。
+多 Key 管理 QuickPick 主流程（`bai.manageApiKeys` 命令）。循环渲染 key 列表（脱敏显示 + 可用性/当前使用/cookie 状态/**积分余额**标记），支持动作：添加 Key、批量导入、删除、设为当前使用（仅 single 模式）、重置失效状态、检测可用性、绑定/更新/清除 Cookie、编辑 Key。**添加 / 批量导入 / 编辑三个流程的输入顺序统一为 key → cookie → 备注**（与上游 v1.10.1 对齐）。
 
 #### `showWelcomeIfNeeded(context: vscode.ExtensionContext): Promise<void>`
 检查是否已显示过欢迎页（`globalState` 的 `WELCOME_SHOWN_KEY`）。已标记或已有 API Key 直接返回；否则打开 Walkthrough 并标记。

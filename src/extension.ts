@@ -469,16 +469,17 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
             return false;
         }
         const trimmed = keyValue.trim();
-        const label = await vscode.window.showInputBox({
-            title: l10n("Add API Key"),
-            prompt: l10n("Enter an optional label for this key"),
-            ignoreFocusOut: true,
-        });
+        // Unified triple order: key → cookie → label (matches batch import & edit).
         const cookie = await vscode.window.showInputBox({
             title: l10n("Add API Key"),
             prompt: l10n("Enter the __Secure-authjs.session-token cookie for this key (optional)"),
             ignoreFocusOut: true,
             password: true,
+        });
+        const label = await vscode.window.showInputBox({
+            title: l10n("Add API Key"),
+            prompt: l10n("Enter an optional label for this key"),
+            ignoreFocusOut: true,
         });
         const added = await addApiKey(secrets, {
             value: trimmed,
@@ -494,7 +495,7 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
         return true;
     };
 
-    // ---- Batch import flow: QuickPick list of (cookie/key/label) triples ----
+    // ---- Batch import flow: QuickPick list of (key/cookie/label) triples ----
     const batchImportFlow = async (): Promise<void> => {
         interface ImportTriple {
             value: string;
@@ -519,7 +520,7 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
                 });
             }
             items.push({ label: "", kind: vscode.QuickPickItemKind.Separator });
-            items.push({ label: `$(plus) ${l10n("Add a triple (cookie/key/label)")}`, action: "addTriple" });
+            items.push({ label: `$(plus) ${l10n("Add a triple (key/cookie/label)")}`, action: "addTriple" });
             if (pending.length > 0) {
                 items.push({ label: `$(check) ${l10n("Finish import")}`, action: "finish" });
                 items.push({ label: `$(trash) ${l10n("Remove entry")}`, action: "remove" });
@@ -543,7 +544,7 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
             if (action === "addTriple") {
                 // Input key
                 const key = await vscode.window.showInputBox({
-                    title: l10n("Add a triple (cookie/key/label)"),
+                    title: l10n("Add a triple (key/cookie/label)"),
                     prompt: l10n("Enter the API key"),
                     ignoreFocusOut: true,
                     password: true,
@@ -553,7 +554,7 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
                 }
                 // Input cookie (optional)
                 const cookie = await vscode.window.showInputBox({
-                    title: l10n("Add a triple (cookie/key/label)"),
+                    title: l10n("Add a triple (key/cookie/label)"),
                     prompt: l10n("Enter the __Secure-authjs.session-token cookie (optional)"),
                     ignoreFocusOut: true,
                     password: true,
@@ -563,7 +564,7 @@ async function showApiKeyManager(context: vscode.ExtensionContext): Promise<void
                 }
                 // Input label (optional)
                 const label = await vscode.window.showInputBox({
-                    title: l10n("Add a triple (cookie/key/label)"),
+                    title: l10n("Add a triple (key/cookie/label)"),
                     prompt: l10n("Enter an optional label (optional)"),
                     ignoreFocusOut: true,
                 });

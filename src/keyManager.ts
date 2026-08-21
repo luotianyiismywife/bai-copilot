@@ -522,7 +522,7 @@ export async function addApiKey(secrets: vscode.SecretStorage, entry: ApiKeyEntr
 }
 
 /**
- * 批量添加多个 API Key（三元组：cookie / key / 备注）。
+ * 批量添加多个 API Key（三元组：key / cookie / 备注）。
  * 已有重复 key **不跳过**，转为更新其 cookie（补全缺失的 cookie，且新 cookie 覆盖旧的）。
  * 返回新增数量与更新数量。
  */
